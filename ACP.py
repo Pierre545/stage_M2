@@ -10,6 +10,7 @@ import numpy as np
 import scipy
 import os
 import matplotlib.image as mpimg
+from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from pathlib import Path
 from skimage import io
@@ -81,12 +82,39 @@ for name in files:
     
     n = n+1
     
+#Sauvetage de la matrice
+np.savetxt('/home/pierre/Desktop/Stage_M2/Espace_Dev_IRD/images/matrice', matrice, fmt='%d')
+    
 #%%
     
-# Application de l'ACP à la matrice
-    
-pca = PCA()
-matrice_PCA  = pca.fit_transform(matrice)
+# Pretraitement et application de l'ACP à la matrice
+
+#On importe la matrice sauvegardé precedemment
+matrice = np.loadtxt('/home/pierre/Desktop/Stage_M2/Espace_Dev_IRD/images/matrice', dtype=float)
+
+
+##Mettre les données sous le meme orde de grandeur
+
+scale = StandardScaler()
+
+#Calcul de la moyenne et de l'écart-type
+scale.fit(matrice)
+
+#Transformation des données
+matrice_scale = scale.transform(matrice)
+
+
+##Application de l'ACP
+
+pca = PCA(n_components = 18, random_state = 2020)
+pca.fit(matrice_scale)
+matrice_PCA  = pca.transform(matrice_scale)
+
+#Pourcentage de la variance expliqué par chaque composante principale
+pca.explained_variance_ratio_*100
+
+#Somme cumulative des pourcentages
+np.cumsum(pca.explained_variance_ratio_*100)
 
 #%%
 
@@ -121,4 +149,20 @@ fig.colorbar(im1, cax=cax, orientation='vertical')
 divider = make_axes_locatable(ax2)
 cax = divider.append_axes('right', size='5%', pad=0.05)
 fig.colorbar(im2, cax=cax, orientation='vertical')
+
+#%%
+
+#Affichage et sauvegarde des reconstructions des composantes principales
+
+for i in range (7):
+    a = matrice_PCA[:,i]
+    b = a.reshape((1250,2250))
+
+    plt.figure()
+    plt.title("PCA "+str(i+1))
+    plt.imshow(b)
+    plt.colorbar()
+    plt.savefig('/home/pierre/Desktop/Stage_M2/Espace_Dev_IRD/images/zone_etude_test/ACP/PCA'+str(i+1)+'.png')
+    plt.show()
+
 
