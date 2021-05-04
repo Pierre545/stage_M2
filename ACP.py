@@ -108,7 +108,12 @@ matrice_scale = scale.transform(matrice)
 
 pca = PCA(n_components = 18, random_state = 2020)
 pca.fit(matrice_scale)
-matrice_PCA  = pca.transform(matrice_scale)
+
+#Composantes principales
+matrice_PC  = pca.transform(matrice_scale)
+
+#Fonctions orthogonale empirique
+EOFs = pca.components_
 
 #Pourcentage de la variance expliqué par chaque composante principale
 pca.explained_variance_ratio_*100
@@ -120,7 +125,7 @@ np.cumsum(pca.explained_variance_ratio_*100)
 
 #Extraction d'une partie de la matrice et d'une partie de la matrice après application de l'ACP
 b1 = matrice[0:200,0:]
-b2 = matrice_PCA[0:200,0:]
+b2 = matrice_PC[0:200,0:]
 
 #Affichage des variables b1 et b2
 fig = plt.figure(figsize=(10,30))
@@ -135,9 +140,6 @@ im2 = ax2.imshow(b2)
 
 ax1.set_xlabel('Temps')
 ax1.set_ylabel('Espace')
-
-ax2.set_xlabel('Temps')
-ax2.set_ylabel('Espace')
 
 ax1.set_title('Matrice')
 ax2.set_title('Matrice_ACP')
@@ -160,9 +162,52 @@ for i in range (7):
 
     plt.figure()
     plt.title("PCA "+str(i+1))
-    plt.imshow(b)
+    plt.imshow(b,cmap='gray')
     plt.colorbar()
     plt.savefig('/home/pierre/Desktop/Stage_M2/Espace_Dev_IRD/images/zone_etude_test/ACP/PCA'+str(i+1)+'.png')
     plt.show()
+
+#%%
+    
+#Création de deux matrices, l'une contenant une image moyenne de la série temporelle de la zone d'étude, l'autre contenant la somme des ACP    
+a = np.zeros((1,2812500))
+b = np.zeros((1,2812500))
+
+for i in range (18):
+    a = a + matrice[:,i]
+for i in range (3):
+    b = b + matrice_PC[:,i]
+
+a = a / 18
+
+a.resize((1250,2250))
+b.resize((1250,2250))
+
+
+#Affichage des deux matrices et de leurs différences
+fig = plt.figure(figsize=(20,100))
+ax1 = fig.add_subplot(131)
+ax2 = fig.add_subplot(132)
+ax3 = fig.add_subplot(133)
+im1 = ax1.imshow(a,cmap='gray')
+im2 = ax2.imshow(b,cmap='gray')
+im3 = ax3.imshow(a-b,cmap='gray')
+
+ax1.set_title('Image moyenne de la zone étudiée')
+ax2.set_title('Somme des ACP 1,2 et 3')
+ax3.set_title('Image moyenne - Somme des ACP 1,2 et 3')
+
+divider = make_axes_locatable(ax1)
+cax = divider.append_axes('right', size='5%', pad=0.05)
+fig.colorbar(im1, cax=cax, orientation='vertical')
+
+divider = make_axes_locatable(ax2)
+cax = divider.append_axes('right', size='5%', pad=0.05)
+fig.colorbar(im2, cax=cax, orientation='vertical')
+
+divider = make_axes_locatable(ax3)
+cax = divider.append_axes('right', size='5%', pad=0.05)
+fig.colorbar(im3, cax=cax, orientation='vertical')
+
 
 
