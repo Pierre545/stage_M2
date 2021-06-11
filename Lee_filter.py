@@ -17,6 +17,6 @@ def lee_filter(img, size):
 
     overall_variance = variance(img)
 
-    img_weights = img_variance / (img_variance + overall_variance)
+    img_weights = img_variance**2 / (img_variance**2 + overall_variance**2)
     img_output = img_mean + img_weights * (img - img_mean)
     return img_output
