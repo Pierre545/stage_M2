@@ -6,13 +6,17 @@ Created on Fri Jun 11 10:16:19 2021
 @author: pierre
 """
 import numpy as np
+from matplotlib import pyplot as plt
 
-data_set = np.load()
-file = data_set['arra_0']
+
+data_set = np.load('/media/audisio/Maxtor/resultats/08_06_2021/image_origine/EOF_image_origine/EOF_20.npz')
+file = data_set['arr_0']
 file_flat = file.flatten()
 ax,ay = np.histogram(file, bins = np.linspace(-1,1,10000))
+
 list_value = []
 index = []
+bin_value = []
 
 n = 0
 for i in (ax):
@@ -21,44 +25,49 @@ for i in (ax):
         list_value.append(i)
         index.append(n)
 
-
-bin_value = []
 for i in (index):
     bin_value.append(ay[i])
     
-test_values = np.linspace(0,255,11) 
 
-for i in range (len(file_flat)):
-    if (file_flat[i] >= bin_value[0] and file_flat[i] <= bin_value[1]):
-        file_flat[i] = test_values[1]
+
+#%%
+
+def transfo_hist( x ):
+    
+    #file_flat = x.flatten()
+    #Evaluer avec et sans flattening
+    
+    #Les valeurs etudie sont toute comprise entre -1 et 1
+    ax,ay = np.histogram(file, bins = np.linspace(-1,1,10000))
+    
+    
+    bin_value = np.zeros(3)
+    nb_value = 0
+    
+    
+    for i in (ax):
+        if (i >= nb_value[1]):
+            nb_value = i
+            
+            bin_value[0] = ay[i-1]
+            bin_value[1] = ay[i]
+            bin_value[2] = ay[i+1]
+            
+ 
+    
+    for i in range (len(file_flat)):
+        if (file_flat[i] >= bin_value[2]):
+            file_flat[i] = 150
+        if ( file_flat[i] <= bin_value[1]):
+            file_flat[i] = 150
+        else :
+            file_flat[i] = 0
         
-    if (file_flat[i] >= bin_value[1] and file_flat[i] <= bin_value[2]):
-        file_flat[i] = test_values[2]
         
-    if (file_flat[i] >= bin_value[2] and file_flat[i] <= bin_value[3]):
-        file_flat[i] = test_values[3]
-
-    if (file_flat[i] >= bin_value[3] and file_flat[i] <= bin_value[4]):
-        file_flat[i] = test_values[4]
-
-    if (file_flat[i] >= bin_value[4] and file_flat[i] <= bin_value[5]):
-        file_flat[i] = test_values[5]
-
-    if (file_flat[i] >= bin_value[5] and file_flat[i] <= bin_value[6]):
-        file_flat[i] = test_values[6]
-
-    if (file_flat[i] >= bin_value[6] and file_flat[i] <= bin_value[7]):
-        file_flat[i] = test_values[7]
-
-    if (file_flat[i] >= bin_value[7] and file_flat[i] <= bin_value[8]):
-        file_flat[i] = test_values[8]
-
-    if (file_flat[i] >= bin_value[8] and file_flat[i] <= bin_value[9]):
-        file_flat[i] = test_values[9]
-
-    if (file_flat[i] >= bin_value[9] and file_flat[i] <= bin_value[10]):        
+    img = file_flat.reshape((6000,10500))
         
-        file_flat[i] = test_values[10]
+    return( img )
 
-    else :
-        file_flat[i] = 0
+
+
+plt.imshow(b)
