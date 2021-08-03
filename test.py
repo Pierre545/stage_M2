@@ -13,4 +13,4 @@ band = dataset.GetRasterBand(1)
 x = 10500 
 y = 6000
 array = band.ReadAsArray(1050,950,x,y)
-Image.fromarray(b).save('/media/audisio/Maxtor/resultats/07_07_2021/test.tif')
+Image.fromarray(array).save('/media/audisio/Maxtor/resultats/07_07_2021/test.tif')
