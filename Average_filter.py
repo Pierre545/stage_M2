@@ -8,7 +8,7 @@ Created on Wed Aug  4 18:33:20 2021
 import numpy as np
 
 
-def convolution2d(image, kernel, bias):
+def convolution2d(image, kernel):
     m, n = kernel.shape
     if (m == n):
         y, x = image.shape
@@ -17,5 +17,5 @@ def convolution2d(image, kernel, bias):
         new_image = np.zeros((y,x))
         for i in range(y):
             for j in range(x):
-                new_image[i][j] = np.sum(image[i:i+m, j:j+m]*kernel) + bias
+                new_image[i,j] = np.sum(image[i:i+m, j:j+m]*kernel) 
     return new_image
