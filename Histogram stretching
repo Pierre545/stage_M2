@@ -1,0 +1,17 @@
+import numpy as np
+from matplotlib import pyplot as plt
+
+def histogram_etirage( x ):
+
+    x = x.flatten()
+    ax,ay = np.histogram(x, bins = np.linspace(0,1,10000))
+    
+    cum_hist = np.cumsum(ay)
+    cum_hist = (cum_hist * 255) / cum_hist[-1]
+
+    image = np.interp(x, np.linspace(0, 1, 10000), np.round(cum_hist))
+    image = image.reshape((6000,10500))
+    
+    #plt.hist(cum_hist,bins = np.arange(0,256,1))
+    
+    return(image)
