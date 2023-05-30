@@ -1,1 +1,26 @@
+from matplotlib import pyplot as plt
+import numpy as np
 
+
+plt.figure()
+plt.xlabel("Above Ground Biomasse (kg)")
+plt.ylabel("Diameter (cm)")
+plt.grid(axis="both")
+plt.plot(b1,diam,"b*",label='Rhizophora Mucronata')
+plt.plot(b2,diam,"r+",label='Rhizophora Stylosa')
+plt.legend(loc ='upper left')
+plt.show()
+
+#%%
+#Affichage des variables b1 et b2
+fig, axs = plt.subplots(2, sharex=True)
+# plt.xlabel("PC1")
+# plt.ylabel("AGB")
+
+axs[0].set_title('Rhizophora Selala')
+axs[0].grid(axis="both")
+axs[0].plot(b1, diam, "--b+")
+
+axs[1].set_title('Rhizophora Mucronata')
+axs[1].grid(axis="both")
+axs[1].plot(b2, diam, "--b+")
